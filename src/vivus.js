@@ -216,6 +216,16 @@ Vivus.prototype.setOptions = function (options) {
   if (this.delay >= this.duration) {
     throw new Error('Vivus [constructor]: delay must be shorter than duration');
   }
+
+  if (!!options.finalAnimation && options.finalAnimation.constructor !== Function) {
+    throw new Error('Vivus [constructor]: "finalAnimation" parameter must be a function');
+  }
+  if (options.finalAnimation) {
+    this.finalAnimation = options.finalAnimation;
+    this.hasFinalAnimation = true;
+  } else {
+    this.hasFinalAnimation = false;
+  }
 };
 
 /**
@@ -271,7 +281,8 @@ Vivus.prototype.mapping = function () {
     }
     pathObj = {
       el: path,
-      length: Math.ceil(path.getTotalLength())
+      length: Math.ceil(path.getTotalLength()),
+      hasPlayedFinalAnimation: (this.hasFinalAnimation ? false : true) // if this instance doesn't have a final animation function, then set "already played" to true so it never plays
     };
     // Test if the path length is correct
     if (isNaN(pathObj.length)) {
@@ -396,6 +407,11 @@ Vivus.prototype.trace = function () {
       path.progress = progress;
       path.el.style.strokeDashoffset = Math.floor(path.length * (1 - progress));
       this.renderPath(i);
+
+      if (!path.hasPlayedFinalAnimation && path.el.style.strokeDashoffset <= 0) {
+        path.hasPlayedFinalAnimation = true;
+        this.finalAnimation(path.el);
+      }
     }
   }
 };

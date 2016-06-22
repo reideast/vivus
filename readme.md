@@ -1,3 +1,5 @@
+## vuvus.js Modified to execute a callback once per path, on that path after it has been drawn
+
 # vivus.js
 
 Demo available on http://maxwellito.github.io/vivus
