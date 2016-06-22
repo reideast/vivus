@@ -1,4 +1,6 @@
-## vuvus.js Modified to execute a callback once per path, on that path after it has been drawn
+## vuvus.js Modified
+
+Can execute a callback once per path after it has been drawn. Callback is provided in the constructor options object as "finalAnimation". It is a function that has a single argument, the current path's DOM object.
 
 # vivus.js
 
